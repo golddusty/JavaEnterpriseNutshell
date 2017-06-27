@@ -1,0 +1,62 @@
+<!DOCTYPE weblogic-rdbms-jar PUBLIC 
+ '-//BEA Systems, Inc.//DTD WebLogic 6.0.0 EJB RDBMS Persistence//EN'
+ 'http://www.bea.com/servers/wls600/dtd/weblogic-rdbms20-persistence.dtd'>
+<weblogic-rdbms-jar>
+  <!-- CMP info for Person bean -->
+  <weblogic-rdbms-bean>
+    <ejb-name>CMP20PersonBean</ejb-name>
+    <data-source-name>jdbc/ProfileDB</data-source-name>
+    <table-name>PERSON</table-name>
+    <field-map>
+      <cmp-field>name</cmp-field>
+      <dbms-column>NAME</dbms-column>
+    </field-map>
+    <field-map>
+      <cmp-field>firstNameLocal</cmp-field>
+      <dbms-column>FIRST_NAME</dbms-column>
+    </field-map>
+    <field-map>
+      <cmp-field>lastNameLocal</cmp-field>
+      <dbms-column>LAST_NAME</dbms-column>
+    </field-map>
+  </weblogic-rdbms-bean>
+
+  <!-- CMP info for Profile bean -->
+  <weblogic-rdbms-bean>
+    <ejb-name>CMP20ProfileBean</ejb-name>
+    <data-source-name>jdbc/ProfileDB</data-source-name>
+    <table-name>PROFILE_BIN</table-name>
+    <field-map>
+      <cmp-field>name</cmp-field>
+      <dbms-column>NAME</dbms-column>
+    </field-map>
+    <field-map>
+      <cmp-field>entriesBytes</cmp-field>
+      <dbms-column>ENTRIES_BYTES</dbms-column>
+    </field-map>
+  </weblogic-rdbms-bean>
+
+  <!-- Bean relations -->
+<!--  <weblogic-rdbms-relation>
+    <relation-name>Person-Profile</relation-name>
+    <weblogic-relationship-role>
+      <relationship-role-name>
+        Person-has-Profile
+      </relationship-role-name>
+      <column-map>
+        <foreign-key-column>NAME</foreign-key-column>
+        <key-column>NAME</key-column>
+      </column-map>
+    </weblogic-relationship-role>
+    <weblogic-relationship-role>
+      <relationship-role-name>
+        Profile-belongs-to-Person
+      </relationship-role-name>
+      <column-map>
+        <foreign-key-column>NAME</foreign-key-column>
+        <key-column>NAME</key-column>
+      </column-map>
+    </weblogic-relationship-role>
+  </weblogic-rdbms-relation>
+-->
+</weblogic-rdbms-jar>

@@ -1,0 +1,57 @@
+// A series of IDL tests intended to test the mapping of IDL implemented
+// by a particular IDL compiler.
+
+#define foobar
+
+module test {
+  const short largeVal = 2000;
+  const float largeFloatVal = 2000;
+  const long ival2 = -456;
+  const string name = "Jim " "Farley";
+  typedef short short2x2Array[2][2];
+  typedef sequence<long, 2> Coord2d;
+  typedef sequence<long, 3> Coord3d;
+  union MultiCoord switch (short) {
+  case 1:
+    long pos;
+  case 2:
+    Coord2d val2d;
+  case 3:
+  default:
+    Coord3d val3d;
+  };
+  union MultiCoord2 switch (short) {
+  case 1:
+  case 2:
+    Coord2d val2d;
+  case 3:
+    Coord3d val3d;
+  default:
+    Coord3d valDef;
+  };
+  enum ErrorCode { BadValue, DimensionError, Overflow, Underflow };
+  interface foobar {
+    attribute short2x2Array identity2D;
+    typedef short myShort;
+    typedef long longArray[2][2];
+    typedef foobar fooref;
+    const long ival = -123;
+
+#ifdef foobar    
+    fooref getFoobar();
+#endif
+  };
+
+  valuetype Coord3DVal {
+    // The state that should be passed by value
+    private Coord3d coord;
+    // A local short attribute, not passed in remote operations
+    attribute short localShort;
+    // Initializer for this type
+    factory makeCoord(in long x, in long y, in long z);
+    // Operations to access state, etc.
+    long getX();
+    long getY();
+    long getZ();
+  };
+};

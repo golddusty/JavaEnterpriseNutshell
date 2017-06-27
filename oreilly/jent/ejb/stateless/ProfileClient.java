@@ -1,0 +1,45 @@
+package oreilly.jent.ejb.stateless;
+
+import javax.ejb.*;
+import javax.naming.*;
+import java.rmi.*;
+import java.util.Properties;
+import oreilly.jent.ejb.*;
+
+public class ProfileClient {
+  public static void main(String[] args) {
+    String name = args[0];
+
+    try {
+      // Get a JNDI context for our EJB server
+      Context context = new InitialContext();
+
+      // Get the ProfileServer home interface and create a ProfileServer bean
+      ProfileServerHome psHome =
+        (ProfileServerHome) context.lookup("ejb/ProfileServerHome");
+      ProfileServer server = psHome.create();
+
+      // Ask the server for the requested person's profile
+      System.out.println("Finding profile for " + name);
+      ProfileBean profile = server.getProfile(name);
+
+      // Get/set some entries in the profile
+      System.out.println("Setting profile entries for " + name);
+      profile.setEntry("favoriteColor", "blue");
+      profile.setEntry("language", "German");
+
+      System.out.println("Getting profile entries for " + name);
+      System.out.println(
+        "\tFavorite color: " + profile.getEntry("favoriteColor"));
+      System.out.println("\tLanguage: " + profile.getEntry("language"));
+    }
+    catch (NoSuchPersonException nspe) {
+      System.out.println("Invalid person: " + name);
+      nspe.printStackTrace();
+    }
+    catch (Exception e) {
+      System.out.println("Error while creating/using profile server.");
+      e.printStackTrace();
+    }
+  }
+}

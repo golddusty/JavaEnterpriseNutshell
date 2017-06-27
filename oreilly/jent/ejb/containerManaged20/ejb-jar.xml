@@ -1,0 +1,163 @@
+<?xml version="1.0"?>
+
+<!-- Deployment descriptor for the CMP 2.0 Profile EJB
+     Example 8-14, Java Enterprise in a Nutshell, 2nd ed.
+     Author: Jim Farley -->
+     
+<!DOCTYPE ejb-jar PUBLIC 
+          '-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 2.0//EN' 
+          'http://java.sun.com/dtd/ejb-jar_2_0.dtd'>
+
+<ejb-jar>
+  <enterprise-beans>
+    <!-- A Profile EJB using container-managed persistence -->
+    <entity>
+      <ejb-name>CMP20ProfileBean</ejb-name>
+      <home>oreilly.jent.ejb.containerManaged20.ProfileHome</home>
+      <remote>oreilly.jent.ejb.Profile</remote>
+      <local-home>
+        oreilly.jent.ejb.containerManaged20.ProfileLocalHome
+      </local-home>
+      <local>oreilly.jent.ejb.containerManaged20.ProfileLocal</local>
+      <ejb-class>oreilly.jent.ejb.containerManaged20.ProfileBean</ejb-class>
+      <persistence-type>Container</persistence-type>
+      <prim-key-class>java.lang.String</prim-key-class>
+      <reentrant>False</reentrant>
+      <cmp-version>2.x</cmp-version>
+      <abstract-schema-name>ProfileBean</abstract-schema-name>
+
+      <!-- Indicate which fields need to be managed persistently -->
+      <cmp-field>
+        <description>Name of the profile owner</description>
+        <field-name>name</field-name>
+      </cmp-field>
+      <cmp-field>
+        <description>Binary data containing profile entries.</description>
+        <field-name>entriesBytes</field-name>
+      </cmp-field>
+
+      <!-- Since our primary key is simple (one-column), we need to specify
+           to the container which field maps to the primary key -->
+      <primkey-field>name</primkey-field>
+
+      <security-identity>
+        <use-caller-identity />
+      </security-identity>
+
+      <!-- Provide the EJB-QL definition for the finder method -->
+      <query>
+        <query-method>
+          <method-name>findByNameComponents</method-name>
+          <method-params>
+            <!-- First name parameter -->
+            <method-param>java.lang.String</method-param>
+            <!-- Last name parameter -->
+            <method-param>java.lang.String</method-param>
+          </method-params>
+        </query-method>
+        <ejb-ql>
+          <![CDATA[SELECT OBJECT(p) FROM ProfileBean AS p 
+                   WHERE p.name = CONCAT(?1,?2)]]>
+        </ejb-ql>
+      </query>
+
+      <query>
+        <query-method>
+          <method-name>findEmptyProfiles</method-name>
+          <method-params></method-params>
+        </query-method>
+        <ejb-ql>
+          <![CDATA[SELECT OBJECT(p) FROM ProfileBean AS p
+                   WHERE p.entriesBytes IS NULL]]>
+        </ejb-ql>
+      </query>
+    </entity>
+    <!-- A Person EJB using container-managed persistence -->
+    <entity>
+      <ejb-name>CMP20PersonBean</ejb-name>
+      <home>oreilly.jent.ejb.containerManaged20.PersonHome</home>
+      <remote>oreilly.jent.ejb.Person</remote>
+      <local-home>
+        oreilly.jent.ejb.containerManaged20.PersonLocalHome
+      </local-home>
+      <local>oreilly.jent.ejb.containerManaged20.PersonLocal</local>
+      <ejb-class>oreilly.jent.ejb.containerManaged20.PersonBean</ejb-class>
+      <persistence-type>Container</persistence-type>
+      <prim-key-class>java.lang.String</prim-key-class>
+      <reentrant>False</reentrant>
+      <cmp-version>2.x</cmp-version>
+      <abstract-schema-name>PersonBean</abstract-schema-name>
+
+      <cmp-field><field-name>name</field-name></cmp-field>
+      <cmp-field><field-name>firstNameLocal</field-name></cmp-field>
+      <cmp-field><field-name>lastNameLocal</field-name></cmp-field>
+
+      <!-- Since our primary key is now simple, we need to specify
+           to the container which field maps to the primary key -->
+      <primkey-field>name</primkey-field>
+
+      <ejb-ref>
+        <ejb-ref-name>ejb/CMP20-ProfileHome</ejb-ref-name>
+        <ejb-ref-type>Entity</ejb-ref-type>
+        <home>oreilly.jent.ejb.containerManaged20.ProfileHome</home>
+        <remote>oreilly.jent.ejb.Profile</remote>
+        <ejb-link>CMP20ProfileBean</ejb-link>
+      </ejb-ref>
+    </entity>
+  </enterprise-beans>
+
+<!-- Uncomment to establish EJB relationship between Person and their Profile
+-->
+<!--
+  <relationships>
+    <ejb-relation>
+      <ejb-relation-name>Person-Profile</ejb-relation-name>
+      <ejb-relationship-role>
+        <ejb-relationship-role-name>
+          Person-has-Profile
+        </ejb-relationship-role-name>
+        <multiplicity>one</multiplicity>
+        <relationship-role-source>
+          <ejb-name>CMP20PersonBean</ejb-name>
+        </relationship-role-source>
+        <cmr-field>
+          <cmr-field-name>profileLocal</cmr-field-name>
+        </cmr-field>
+      </ejb-relationship-role>
+      <ejb-relationship-role>
+        <ejb-relationship-role-name>
+          Profile-belongs-to-Person
+        </ejb-relationship-role-name>
+        <multiplicity>one</multiplicity>
+        <relationship-role-source>
+          <ejb-name>CMP20ProfileBean</ejb-name>
+        </relationship-role-source>
+        <cmr-field>
+          <cmr-field-name>personLocal</cmr-field-name>
+        </cmr-field>
+      </ejb-relationship-role>
+    </ejb-relation>
+  </relationships>
+-->
+  <assembly-descriptor>
+    <security-role>
+      <description>
+        Profile administrators, allowed to update entries
+      </description>
+      <role-name>profile-admin</role-name>
+    </security-role>
+
+    <method-permission>
+      <description>
+        Only allow profile administrators to set entries on profiles
+      </description>
+      <role-name>profile-admin</role-name>
+      <method>
+        <ejb-name>CMP20ProfileBean</ejb-name>
+        <method-name>setEntry</method-name>
+      </method>
+    </method-permission>
+  </assembly-descriptor>
+  <ejb-client-jar>cmp-2.0-client.jar</ejb-client-jar>
+</ejb-jar>
+

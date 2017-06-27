@@ -1,0 +1,22 @@
+//
+// Simple server interfaces defined in IDL.
+// Example form ch 4, "Java IDL", Java Enterprise in a Nutshell, 2nd ed
+// Author: Jim Farley
+//
+
+module OS {
+  module services {
+    interface Server {
+      readonly attribute string serverName;
+      boolean init(in string sName);
+    };
+
+    interface Printable {
+      boolean print(in string header);
+    };
+
+    interface PrintServer : Server {
+      boolean printThis(in Printable p);
+    };
+  };
+};

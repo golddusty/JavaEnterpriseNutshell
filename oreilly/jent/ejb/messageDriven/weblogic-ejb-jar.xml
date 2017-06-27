@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE weblogic-ejb-jar PUBLIC '-//BEA Systems, Inc.//DTD WebLogic 6.0.0 EJB//EN' 'http://www.bea.com/servers/wls600/dtd/weblogic-ejb-jar.dtd'>
+
+<weblogic-ejb-jar>
+  <weblogic-enterprise-bean>
+    <ejb-name>ProfileProxyBean</ejb-name>
+    <message-driven-descriptor>
+      <destination-jndi-name>jms/ProfileProxyQueue</destination-jndi-name>
+    </message-driven-descriptor>
+    <reference-descriptor>
+      <ejb-local-reference-description>
+        <ejb-ref-name>ejb/ProfileBean</ejb-ref-name>
+	<jndi-name>ejb/CMP20-ProfileLocalHome</jndi-name>
+      </ejb-local-reference-description>
+    </reference-descriptor>
+    <jndi-name>ejb/ProfileProxy</jndi-name>
+  </weblogic-enterprise-bean>
+</weblogic-ejb-jar>
+

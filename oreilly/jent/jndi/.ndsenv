@@ -1,0 +1,2 @@
+java.naming.factory.initial=com.novell.service.nds.naming.NdsInitialContextFactory
+java.naming.provider.url=nds://novell_inc/

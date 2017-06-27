@@ -1,0 +1,30 @@
+// Forward-declare the Account interface, for the typedefs below
+interface Account;
+
+// Declare a few useful typedefs: a list of Accounts and a list of floats
+typedef sequence<Account> AccountList;
+typedef sequence<float> floatList;
+
+exception InsufficientFundsException {};
+      
+interface Account {
+  // Get the name of the account owner
+  string getName();
+  // The account balance
+  float getBalance();
+  // Withdraw funds from the account
+  void withdraw(in float amt) raises (InsufficientFundsException);
+  // Deposit funds to the account
+  void deposit(in float amt);
+  // Transfer funds from the source account to this account
+  void transfer(in float amt, in Account src)
+  raises (InsufficientFundsException);
+  // Similar to above, but perform transfers from a series of
+  // source Accounts
+  void transferBatch(in floatList amts, in AccountList srcs)
+  raises (InsufficientFundsException);
+};
+
+interface AccountManager {
+  boolean updateAccount(inout Account account);
+};

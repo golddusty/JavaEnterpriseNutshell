@@ -1,0 +1,34 @@
+<!DOCTYPE weblogic-rdbms-bean PUBLIC 
+ '-//BEA Systems, Inc.//DTD WebLogic 5.1.0 EJB RDBMS Persistence//EN'
+ 'http://www.bea.com/servers/wls510/dtd/weblogic-rdbms-persistence.dtd'>
+<weblogic-rdbms-bean>
+  <pool-name>profileDB</pool-name>
+  <table-name>PROFILE_BIN</table-name>
+  <attribute-map>
+    <object-link>
+      <bean-field>mName</bean-field>
+      <dbms-column>NAME</dbms-column>
+    </object-link>
+    <object-link>
+      <bean-field>mEntriesBytes</bean-field>
+      <dbms-column>ENTRIES_BYTES</dbms-column>
+    </object-link>
+  </attribute-map>
+  <finder-list>
+<!--    <finder>
+      <method-name>findByPrimaryKey</method-name>
+      <method-params>
+        <method-param>java.lang.String</method-param>
+      </method-params>
+      <finder-query><![CDATA[(= mName $0)]]></finder-query>
+    </finder>
+-->
+    <finder>
+      <method-name>findEmptyProfiles</method-name>
+      <finder-query><![CDATA[(isNull mEntriesBytes)]]></finder-query>
+    </finder>
+  </finder-list>
+  <options>
+    <use-quoted-names>false</use-quoted-names>
+  </options>
+</weblogic-rdbms-bean>

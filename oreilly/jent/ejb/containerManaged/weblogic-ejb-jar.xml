@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE weblogic-ejb-jar PUBLIC '-//BEA Systems, Inc.//DTD WebLogic 6.0.0 EJB//EN' 'http://www.bea.com/servers/wls600/dtd/weblogic-ejb-jar.dtd'>
+
+<weblogic-ejb-jar>
+  <weblogic-enterprise-bean>
+    <ejb-name>CMP 1.1 Profile Bean</ejb-name>
+    <entity-descriptor>
+      <persistence>
+        <persistence-type>
+          <type-identifier>WebLogic_CMP_RDBMS</type-identifier>
+          <type-version>5.1.0</type-version>
+          <type-storage>META-INF/weblogic-cmp-rdbms-profile-jar.xml</type-storage>
+        </persistence-type>
+        <persistence-use>
+  	  <type-identifier>WebLogic_CMP_RDBMS</type-identifier>
+          <type-version>5.1.0</type-version>
+        </persistence-use>
+      </persistence>
+    </entity-descriptor>
+    <reference-descriptor>
+      <resource-description>
+        <res-ref-name>jdbc/ProfileDB</res-ref-name>
+	<jndi-name>jdbc/ProfileDB</jndi-name>
+      </resource-description>
+    </reference-descriptor>
+    <jndi-name>ejb/CMP-ProfileHome</jndi-name>
+  </weblogic-enterprise-bean>
+  <weblogic-enterprise-bean>
+    <ejb-name>CMP 1.1 Person Bean</ejb-name>
+    <entity-descriptor>
+      <persistence>
+        <persistence-type>
+          <type-identifier>WebLogic_CMP_RDBMS</type-identifier>
+          <type-version>5.1.0</type-version>
+          <type-storage>META-INF/weblogic-cmp-rdbms-person-jar.xml</type-storage>
+        </persistence-type>
+        <persistence-use>
+  	  <type-identifier>WebLogic_CMP_RDBMS</type-identifier>
+          <type-version>5.1.0</type-version>
+        </persistence-use>
+      </persistence>
+    </entity-descriptor>
+    <reference-descriptor>
+      <resource-description>
+        <res-ref-name>jdbc/ProfileDB</res-ref-name>
+	<jndi-name>jdbc/ProfileDB</jndi-name>
+      </resource-description>
+      <ejb-reference-description>
+        <ejb-ref-name>ejb/CMP-ProfileHome</ejb-ref-name>
+        <jndi-name>ejb/CMP-ProfileHome</jndi-name>
+      </ejb-reference-description>
+    </reference-descriptor>
+    <jndi-name>ejb/CMP-PersonHome</jndi-name>
+  </weblogic-enterprise-bean>
+</weblogic-ejb-jar>
+

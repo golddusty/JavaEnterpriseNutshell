@@ -1,0 +1,47 @@
+<?xml version="1.0" ?>
+
+<!-- Deployment descriptor for the ProfileServer stateless session EJB
+     Example 8-7, Java Enterprise in a Nutshell, 2nd ed.
+     Author: Jim Farley -->
+     
+<!DOCTYPE ejb-jar PUBLIC 
+          '-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 2.0//EN' 
+          'http://java.sun.com/j2ee/dtds/ejb-jar_2_0.dtd'>
+
+<ejb-jar>
+  <!-- Description of contents -->
+  <description>Profile server bean (stateless)</description>
+  <display-name>Profile Server Bean (stateless)</display-name>
+  <enterprise-beans>
+    <!-- A stateless session profile server EJB -->
+    <session>
+      <display-name>Profile Server Bean</display-name>
+      <ejb-name>ProfileServerBean</ejb-name>
+      <!-- Remote home interface -->
+      <home>oreilly.jent.ejb.stateless.ProfileServerHome</home>
+      <!-- Remote bean interface -->
+      <remote>oreilly.jent.ejb.stateless.ProfileServer</remote>
+      <!-- Local home interface -->
+      <local-home>oreilly.jent.ejb.stateless.ProfileServerLocalHome</local-home>
+      <!-- Local bean interface -->
+      <local>oreilly.jent.ejb.stateless.ProfileServerLocal</local>
+      <!-- Bean implementation class -->
+      <ejb-class>oreilly.jent.ejb.stateless.ProfileServerBean</ejb-class>
+      <session-type>Stateless</session-type>
+      <transaction-type>Container</transaction-type>
+    </session>
+  </enterprise-beans>
+
+  <assembly-descriptor>
+    <container-transaction>
+      <method>
+        <ejb-name>ProfileServerBean</ejb-name>
+        <method-name>getProfile</method-name>
+      </method>
+      <trans-attribute>Supports</trans-attribute>
+    </container-transaction>
+  </assembly-descriptor>
+
+  <ejb-client-jar>profileServerClient.jar</ejb-client-jar>
+</ejb-jar>
+

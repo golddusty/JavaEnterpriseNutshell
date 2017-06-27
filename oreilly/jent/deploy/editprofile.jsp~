@@ -1,0 +1,113 @@
+<html>
+<head>
+<title>Edit Your Profile</title>
+</head>
+
+<!-- Import the packages we need. -->
+<%@ page import="oreilly.jent.ejb.*" %>
+<%@ page import="javax.naming.*" %>
+
+<!-- Create a Profile Bean, using the name provided as a URL argument -->
+<jsp:useBean id="stockServer" class="oreilly.jdc.stocks.ejb.StockServer"
+	scope="session">
+  <%
+    Context cntx = null;
+    try {
+      // Get a JNDI context for our EJB server
+      System.out.println("Getting EJB context.");
+      Properties p = new Properties();
+      p.put(Context.INITIAL_CONTEXT_FACTORY,
+	    "weblogic.jndi.T3InitialContextFactory");
+      p.put(Context.PROVIDER_URL, "t3://localhost:7001");
+      cntx = new InitialContext(p);
+      System.out.println("Looking up stock server home interface");
+      StockServerHome stockHome = (StockServerHome)cntx.lookup(argv[0]);
+      System.out.println("Creating stock server");
+      StockServer stockServer = 
+        stockHome.create("file://localhost/c:\\progra~1\\weblogic\\stocks.properties");
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+    }
+  %>
+</jsp:useBean>
+
+<!-- Start the body of the page -->
+<body bgcolor="#FFFFFF" text="#000000" link="#330099" vlink="#666666">
+<table width="100%" border="0">
+  <tr bgcolor="#000055"> 
+    <td> 
+      <h3 align="right"><font color="#FFFF00"><b><font face="Arial, Helvetica, sans-serif">Advanced 
+        Topics in Java Distributed Computing&nbsp;&nbsp;&nbsp;<br>
+        (CSCI E-162) </font></b></font><font color="#FFFF00"><b>&nbsp;&nbsp;&nbsp;</b></font></h3>
+      <h4 align="left">&nbsp;&nbsp;&nbsp;<font color="#8080FF" face="Arial, Helvetica, sans-serif" size="4"><!-- #BeginEditable "Title" -->EJB Stock Server Example<!-- #EndEditable --></font><font size="-1" color="#FFFF00"> 
+        </font></h4>
+    </td>
+  </tr>
+  <tr> 
+    <td> 
+      <div align="right"><font size="-1" color="#FFFF00">&nbsp;<font face="Arial, Helvetica, sans-serif"><a href="http://lab.dce.harvard.edu/extension/cscie162-spring/">CSCI 
+        E-162 home</a></font></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td><!-- #BeginEditable "Main%20body" --> 
+<!-- If we received any transaction arguments, try to issue a request to the
+     stock server and print the results -->
+<% if (request.getParameter("xactType") != null) {
+   try {
+     String req = request.getParameter("xactType");
+     String ticker = request.getParameter("ticker");
+     float price = Float.parseFloat(request.getParameter("price"));
+     if (req.equals("buy")) {
+       if (stockServer.buy(ticker, price))) {
+	 out.println("Buy request for " + ticker + " succeeded.");
+       }
+       else {
+	 System.out.println("Buy request failed.");
+       }
+     }
+     else {
+       if (stockServer.sell(argv[2], Float.parseFloat(argv[4]))) {
+	 System.out.println("Sell request succeeded.");
+       }
+       else {
+	 System.out.println("Sell request failed.");
+       }
+     }
+  } %>
+
+<!-- Print out a form asking for a buy/sell request -->
+  <form method="post" action="<%= request.getRequestURI() %>">
+  <b>Stock transaction:</b><br>
+  <select name="xactType">
+    <option value="buy">buy
+    <option value="sell">sell
+  </select><br>
+  Ticker:<br>
+  <select name="ticker">
+  <%
+    Collection tickers = stockServer.getTickers();
+    Iterator iter = tickers.iterator();
+    while (iter.hasNext()) {
+      String ticker = (String)iter.next();
+      out.println("<OPTION value=\"" + ticker + "\">" + ticker);
+    }
+    out.println("</select><br>");
+  %>
+  Price:<input type="text" name="price"><br>
+  </form>
+
+
+
+      <!-- #EndEditable --></td>
+  </tr>
+  <tr> 
+    <td> 
+      <h6>Last updated:<!-- #BeginDate format:En2 -->09-Feb-2000<!-- #EndDate --></h6>
+    </td>
+  </tr>
+</table>
+</body>
+<!-- #EndTemplate -->
+</html>
